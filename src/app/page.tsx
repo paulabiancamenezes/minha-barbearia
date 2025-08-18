@@ -56,7 +56,7 @@ export default function LoginUser() {
           Entrar
         </Button>
         <Button variant="outline" className="w-full">
-          Entrar com o Google
+          Criar conta
         </Button>
       </CardFooter>
     </Card>

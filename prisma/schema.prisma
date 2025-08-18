@@ -29,3 +29,12 @@ model Agendamento {
   dataHora        DateTime
   status          Status   @default(Aguardando)
 }
+
+model Usuario {
+  id              Int       @id @default(autoincrement())
+  cpf             String    @unique
+  nome            String
+  email           String    @unique
+  telefone        String
+  senha           String
+}

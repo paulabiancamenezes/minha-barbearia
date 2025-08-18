@@ -9,3 +9,12 @@ export type Agendamento = {
 }
 
 export type Status = 'Aguardando' | 'Confirmado' | 'Recusado';
+
+export type Usuario = {
+  id: number;
+  nome: string;
+  email: string;
+  telefone: string;
+  cpf: string;
+  senha: string;
+};

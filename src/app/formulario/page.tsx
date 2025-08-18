@@ -1,5 +1,5 @@
-import Formulario from '@/app/components/formulario';
-import Sidebar from '@/app/components/sidebar';
+import Formulario from '@/components/formulario';
+import Sidebar from '@/components/sidebarUser';
 export default function Home() {
   return (
    <>

@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useEffect, useState, useRef } from 'react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Agendamento } from '@/@types/agendamento'
+import Sidebar from '@/components/siderbarAdmin'
 import {
   Table,
   TableBody,
@@ -42,6 +43,19 @@ export default function ListaAgendamentos() {
   const [alert, setAlert] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const alertTimeout = useRef<NodeJS.Timeout | null>(null);
 
+    // Função para buscar agendamentos
+  async function atualizarAgendamentos() {
+    setLoading(true);
+    try {
+      const novos = await buscarAgendamentos();
+      setAgendamentos(novos);
+    } catch {
+      showAlert('error', 'Erro ao carregar agendamentos');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   function showAlert(type: 'success' | 'error', message: string) {
     setAlert({ type, message });
     if (alertTimeout.current) clearTimeout(alertTimeout.current);
@@ -49,19 +63,20 @@ export default function ListaAgendamentos() {
   }
 
   useEffect(() => {
-    buscarAgendamentos()
-      .then(setAgendamentos)
-      .catch(() => showAlert('error', 'Erro ao carregar agendamentos'))
-      .finally(() => setLoading(false))
+    atualizarAgendamentos();
+    
+   // Atualiza automaticamente a cada 10 segundos
+    const interval = setInterval(atualizarAgendamentos, 100000);
+
     return () => {
+      clearInterval(interval);
       if (alertTimeout.current) clearTimeout(alertTimeout.current);
     }
-  }, [])
-
-  if (loading) return <p className="text-white text-center">Carregando...</p>
+  }, []);
 
   return (
-    <div className="flex items-center flex-col text-zinc-300 p-16 ">
+    <div className="p-4 mx-20">
+      <h2 className="text-2xl font-bold text-white mb-6">Agendamentos</h2>
       <div
         style={{
           position: 'fixed',
@@ -82,7 +97,12 @@ export default function ListaAgendamentos() {
           </Alert>
         )}
       </div>
- 
+
+      <Sidebar />
+        <main className="flex-1 w-full mx-auto p-8 text-white">
+        {loading ? (
+          <p className="text-white">Atualizando dados...</p>
+        ) : (
           <Table> 
             <TableCaption>Consulte seus agendamentos</TableCaption>
             <TableHeader>
@@ -193,7 +213,8 @@ export default function ListaAgendamentos() {
               ))}
              </TableBody>
           </Table>
-
+        )}
+       </main>  
     </div>
   )
 }
